@@ -1,6 +1,3 @@
-<!--
-vim: ft=typescript
--->
 <script lang="ts">
     import { gameManager } from "../../Phaser/Game/GameManager";
     import followImg from "../images/follow.svg";

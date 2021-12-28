@@ -757,9 +757,9 @@ export class RoomConnection implements RoomConnection {
         return this.hasTag("admin");
     }
 
-    public emitEmoteEvent(emoteName: string): void {
+    public emitEmoteEvent(emote: string): void {
         const emoteMessage = new EmotePromptMessage();
-        emoteMessage.setEmote(emoteName);
+        emoteMessage.setEmote(emote);
 
         const clientToServerMessage = new ClientToServerMessage();
         clientToServerMessage.setEmotepromptmessage(emoteMessage);

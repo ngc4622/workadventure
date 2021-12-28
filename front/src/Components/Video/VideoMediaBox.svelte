@@ -4,9 +4,11 @@
     import microphoneCloseImg from "../images/microphone-close.svg";
     import reportImg from "./images/report.svg";
     import blockSignImg from "./images/blockSign.svg";
-    import { videoFocusStore } from "../../Stores/VideoFocusStore";
     import { showReportScreenStore } from "../../Stores/ShowReportScreenStore";
     import { getColorByString, srcObject } from "./utils";
+    import { highlightedEmbedScreen } from "../../Stores/EmbedScreensStore";
+    import type { EmbedScreen } from "../../Stores/EmbedScreensStore";
+    import type { Streamable } from "../../Stores/StreamableCollectionStore";
 
     import Woka from "../Woka/Woka.svelte";
 
@@ -18,6 +20,19 @@
 
     function openReport(peer: VideoPeer): void {
         showReportScreenStore.set({ userId: peer.userId, userName: peer.userName });
+    }
+
+    let embedScreen: EmbedScreen;
+
+    if (peer) {
+        embedScreen = {
+            type: "streamable",
+            embed: peer as unknown as Streamable,
+        };
+    }
+
+    function noDrag() {
+        return false;
     }
 </script>
 
@@ -33,20 +48,31 @@
         class="container {!$constraintStore || $constraintStore.video === false ? '' : 'minimized'}"
         style="background-color: {getColorByString(name)};"
     >
-        <span>{peer.userName}</span>
+        <span style="noselect">{peer.userName}</span>
         <div class="woka-icon"><Woka userId={peer.userId} placeholderSrc={""} /></div>
     </i>
     <!-- {/if} -->
     {#if $constraintStore && $constraintStore.audio === false}
-        <img src={microphoneCloseImg} class="active" alt="Muted" />
+        <img
+            src={microphoneCloseImg}
+            class="active noselect"
+            draggable="false"
+            on:dragstart|preventDefault={noDrag}
+            alt="Muted"
+        />
     {/if}
     <button class="report" on:click={() => openReport(peer)}>
-        <img alt="Report this user" src={reportImg} />
-        <span>Report/Block</span>
+        <img alt="Report this user" draggable="false" on:dragstart|preventDefault={noDrag} src={reportImg} />
+        <span class="noselect">Report/Block</span>
     </button>
     <!-- svelte-ignore a11y-media-has-caption -->
-    <video use:srcObject={$streamStore} autoplay playsinline on:click={() => videoFocusStore.toggleFocus(peer)} />
-    <img src={blockSignImg} class="block-logo" alt="Block" />
+    <video
+        use:srcObject={$streamStore}
+        autoplay
+        playsinline
+        on:click={() => highlightedEmbedScreen.toggleHighlight(embedScreen)}
+    />
+    <img src={blockSignImg} draggable="false" on:dragstart|preventDefault={noDrag} class="block-logo" alt="Block" />
     {#if $constraintStore && $constraintStore.audio !== false}
         <SoundMeterWidget stream={$streamStore} />
     {/if}

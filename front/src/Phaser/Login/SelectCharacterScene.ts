@@ -12,8 +12,8 @@ import { touchScreenManager } from "../../Touch/TouchScreenManager";
 import { PinchManager } from "../UserInput/PinchManager";
 import { selectCharacterSceneVisibleStore } from "../../Stores/SelectCharacterStore";
 import { waScaleManager } from "../Services/WaScaleManager";
-import { isMobile } from "../../Enum/EnvironmentVariable";
 import { analyticsClient } from "../../Administration/AnalyticsClient";
+import { mediaBreakpointUp } from "../../Utils/BreakpointsUtils";
 
 //todo: put this constants in a dedicated file
 export const SelectCharacterSceneName = "SelectCharacterScene";
@@ -58,7 +58,7 @@ export class SelectCharacterScene extends AbstractCharacterScene {
         selectCharacterSceneVisibleStore.set(true);
         this.events.addListener("wake", () => {
             waScaleManager.saveZoom();
-            waScaleManager.zoomModifier = isMobile() ? 2 : 1;
+            waScaleManager.zoomModifier = mediaBreakpointUp("md") ? 2 : 1;
             selectCharacterSceneVisibleStore.set(true);
         });
 
@@ -67,7 +67,7 @@ export class SelectCharacterScene extends AbstractCharacterScene {
         }
 
         waScaleManager.saveZoom();
-        waScaleManager.zoomModifier = isMobile() ? 2 : 1;
+        waScaleManager.zoomModifier = mediaBreakpointUp("md") ? 2 : 1;
 
         const rectangleXStart = this.game.renderer.width / 2 - (this.nbCharactersPerRow / 2) * 32 + 16;
         this.selectedRectangle = this.add.rectangle(rectangleXStart, 90, 32, 32).setStrokeStyle(2, 0xffffff);

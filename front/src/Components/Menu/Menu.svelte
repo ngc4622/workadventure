@@ -114,6 +114,8 @@
 </div>
 
 <style lang="scss">
+    @import "../../../style/breakpoints.scss";
+
     .nes-container {
         padding: 5px;
     }
@@ -125,10 +127,10 @@
         pointer-events: auto;
         height: 80%;
         width: 75%;
-        top: 10%;
+        top: 4%;
 
-        position: relative;
-        z-index: 80;
+        position: absolute;
+        z-index: 900;
         margin: auto;
 
         display: grid;
@@ -162,7 +164,7 @@
         }
     }
 
-    @media only screen and (max-width: 800px) {
+    @include media-breakpoint-up(md) {
         div.menu-container-main {
             --size-first-columns-grid: 120px;
             height: 70%;

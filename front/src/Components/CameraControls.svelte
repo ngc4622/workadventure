@@ -9,10 +9,10 @@
     import microphoneCloseImg from "./images/microphone-close.svg";
     import layoutPresentationImg from "./images/layout-presentation.svg";
     import layoutChatImg from "./images/layout-chat.svg";
-    import { layoutModeStore } from "../Stores/StreamableCollectionStore";
     import { LayoutMode } from "../WebRtc/LayoutManager";
     import { peerStore } from "../Stores/PeerStore";
     import { onDestroy } from "svelte";
+    import { embedScreenLayout } from "../Stores/EmbedScreensStore";
 
     function screenSharingClick(): void {
         if (isSilent) return;
@@ -42,10 +42,10 @@
     }
 
     function switchLayoutMode() {
-        if ($layoutModeStore === LayoutMode.Presentation) {
-            $layoutModeStore = LayoutMode.VideoChat;
+        if ($embedScreenLayout === LayoutMode.Presentation) {
+            $embedScreenLayout = LayoutMode.VideoChat;
         } else {
-            $layoutModeStore = LayoutMode.Presentation;
+            $embedScreenLayout = LayoutMode.Presentation;
         }
     }
 
@@ -56,40 +56,51 @@
     onDestroy(unsubscribeIsSilent);
 </script>
 
-<div>
-    <div class="btn-cam-action">
-        <div class="btn-layout" on:click={switchLayoutMode} class:hide={$peerStore.size === 0}>
-            {#if $layoutModeStore === LayoutMode.Presentation}
-                <img src={layoutPresentationImg} style="padding: 2px" alt="Switch to mosaic mode" />
-            {:else}
-                <img src={layoutChatImg} style="padding: 2px" alt="Switch to presentation mode" />
-            {/if}
-        </div>
-        <div
-            class="btn-monitor"
-            on:click={screenSharingClick}
-            class:hide={!$screenSharingAvailableStore || isSilent}
-            class:enabled={$requestedScreenSharingState}
-        >
-            {#if $requestedScreenSharingState && !isSilent}
-                <img src={monitorImg} alt="Start screen sharing" />
-            {:else}
-                <img src={monitorCloseImg} alt="Stop screen sharing" />
-            {/if}
-        </div>
-        <div class="btn-video" on:click={cameraClick} class:disabled={!$requestedCameraState || isSilent}>
-            {#if $requestedCameraState && !isSilent}
-                <img src={cinemaImg} alt="Turn on webcam" />
-            {:else}
-                <img src={cinemaCloseImg} alt="Turn off webcam" />
-            {/if}
-        </div>
-        <div class="btn-micro" on:click={microphoneClick} class:disabled={!$requestedMicrophoneState || isSilent}>
-            {#if $requestedMicrophoneState && !isSilent}
-                <img src={microphoneImg} alt="Turn on microphone" />
-            {:else}
-                <img src={microphoneCloseImg} alt="Turn off microphone" />
-            {/if}
-        </div>
+<div class="btn-cam-action">
+    <div class="btn-layout" on:click={switchLayoutMode} class:hide={$peerStore.size === 0}>
+        {#if $embedScreenLayout === LayoutMode.Presentation}
+            <img src={layoutPresentationImg} style="padding: 2px" alt="Switch to mosaic mode" />
+        {:else}
+            <img src={layoutChatImg} style="padding: 2px" alt="Switch to presentation mode" />
+        {/if}
+    </div>
+    <div
+        class="btn-monitor"
+        on:click={screenSharingClick}
+        class:hide={!$screenSharingAvailableStore || isSilent}
+        class:enabled={$requestedScreenSharingState}
+    >
+        {#if $requestedScreenSharingState && !isSilent}
+            <img src={monitorImg} alt="Start screen sharing" />
+        {:else}
+            <img src={monitorCloseImg} alt="Stop screen sharing" />
+        {/if}
+    </div>
+    <div class="btn-video" on:click={cameraClick} class:disabled={!$requestedCameraState || isSilent}>
+        {#if $requestedCameraState && !isSilent}
+            <img src={cinemaImg} alt="Turn on webcam" />
+        {:else}
+            <img src={cinemaCloseImg} alt="Turn off webcam" />
+        {/if}
+    </div>
+    <div class="btn-micro" on:click={microphoneClick} class:disabled={!$requestedMicrophoneState || isSilent}>
+        {#if $requestedMicrophoneState && !isSilent}
+            <img src={microphoneImg} alt="Turn on microphone" />
+        {:else}
+            <img src={microphoneCloseImg} alt="Turn off microphone" />
+        {/if}
     </div>
 </div>
+
+<style lang="scss">
+    @media (hover: none) {
+        /**
+        * If we cannot hover over elements, let's display camera button in full.
+        */
+        .btn-cam-action {
+            div {
+                transform: translateY(0px);
+            }
+        }
+    }
+</style>

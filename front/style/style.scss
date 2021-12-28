@@ -36,15 +36,16 @@ body .message-info.warning{
 }
 
 .video-container {
-    position: relative;
+    display: flex;
     transition: all 0.2s ease;
-    background-color: #00000099;
     cursor: url('./images/cursor_pointer.png'), pointer;
+    width: 100%;
 
     video {
+        height: fit-content;
+        max-height: 100%;
+        max-width: 100%;
         width: 100%;
-        height: 100%;
-        object-fit: cover;
         cursor: url('./images/cursor_pointer.png'), pointer;
 
         &.mobile{
@@ -144,35 +145,6 @@ body .message-info.warning{
     video:focus{
         outline: none;
     }
-}
-
-.video-container.div-myCamVideo{
-    border: none;
-    background-color: transparent;
-}
-
-.div-myCamVideo {
-    position: absolute;
-    right: 15px;
-    bottom: 30px;
-    border-radius: 15px 15px 15px 15px;
-    max-height: 20%;
-    transition: right 350ms;
-}
-
-.div-myCamVideo.hide {
-    right: -20vw;
-}
-
-video.myCamVideo{
-    background-color: #00000099;
-    max-height: 20vh;
-    width: 15vw;
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    border-radius: 15px 15px 15px 15px;
-    /*width: 200px;*/
-    /*height: 113px;*/
 }
 
 .sound-progress{
@@ -369,26 +341,6 @@ body {
     position: absolute;
 }
 
-@media (min-aspect-ratio: 1/1) {
-    .game-overlay {
-        flex-direction: row;
-    }
-
-    .sidebar {
-        flex-direction: column;
-    }
-
-    .sidebar > div {
-        max-height: 21%;
-    }
-
-    .sidebar > div:hover {
-        max-height: 25%;
-    }
-
-
-}
-
 #game {
     position: relative; /* Position relative is needed for the game-overlay. */
 
@@ -484,96 +436,6 @@ input[type=range]:focus::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-upper {
     background: #FFFFFF;
-}
-
-
-.game-overlay {
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    /* TODO: DO WE NEED FLEX HERE???? WE WANT A SIDEBAR OF EXACTLY 25% (note: flex useful for direction!!!) */
-}
-
-.game-overlay + div {
-    pointer-events: none;
-}
-
-.game-overlay + div > div {
-    pointer-events: auto;
-}
-
-.game-overlay.active {
-    display: flex;
-}
-
-.game-overlay video {
-    width: 100%;
-}
-
-.main-section {
-    flex: 0 0 75%;
-    display: flex;
-    justify-content: start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
-
-.main-section > div {
-    margin: 2%;
-    flex-basis: 96%;
-    transition: margin-left 0.2s, margin-right 0.2s, margin-bottom 0.2s, margin-top 0.2s, flex-basis 0.2s;
-    cursor: url('./images/cursor_pointer.png'), pointer;
-    pointer-events: auto;
-    /*flex-shrink: 2;*/
-}
-
-.main-section > div:hover {
-    margin: 0%;
-    flex-basis: 100%;
-}
-
-.sidebar {
-    flex: 0 0 25%;
-    display: flex;
-}
-
-.sidebar > div {
-    margin: 2%;
-    transition: margin-left 0.2s, margin-right 0.2s, margin-bottom 0.2s, margin-top 0.2s, max-height 0.2s, max-width 0.2s;
-    cursor: url('./images/cursor_pointer.png'), pointer;
-    border-radius: 15px 15px 15px 15px;
-    pointer-events: auto;
-
-    video {
-        max-height: 21vh;
-    }
-}
-
-.sidebar > div:hover {
-    margin: 0%;
-}
-
-.sidebar > div video {
-    cursor: url('./images/cursor_pointer.png'), pointer;
-}
-
-/* Let's make sure videos are vertically centered if they need to be cropped */
-.media-container {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-radius: 15px;
-}
-
-.chat-mode {
-    display: grid;
-    width: 100%;
-
-    align-items: flex-start;
-
-    padding: 1%;
 }
 
 .chat-mode > div {
@@ -1061,11 +923,19 @@ div.action.danger p.action-body{
 }
 
 
-#svelte-overlay {
+#game-overlay {
     position: absolute;
     width: 100%;
     height: 100%;
     pointer-events: none;
+
+    & + div {
+        pointer-events: none;
+    }
+
+    & + div > div {
+        pointer-events: auto;
+    }
 
     & > div {
         position: relative;
@@ -1084,22 +954,10 @@ div.action.danger p.action-body{
             pointer-events: auto;
         }
     }
-}
 
-div.is-silent {
-    position: absolute;
-    bottom: 40px;
-    border-radius: 15px 15px 15px 15px;
-    max-height: 20%;
-    transition: right 350ms;
-    right: -300px;
-    background-color: black;
-    font-size: 20px;
-    color: white;
-    padding: 30px 20px;
-}
-div.is-silent.hide {
-    right: 15px;
+    &.hide {
+        visibility: hidden;
+    }
 }
 
 div.emoji-picker {
